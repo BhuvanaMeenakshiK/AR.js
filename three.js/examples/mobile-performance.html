@@ -8,14 +8,13 @@
 <script>THREEx.ArToolkitContext.baseURL = '../'</script>
 
 <body style='margin : 0px; overflow: hidden; font-family: Monospace;'><div style='position: absolute; top: 10px; width:100%; text-align: center; z-index: 1;'>
-	<a href="https://github.com/BhuvanaMeenakshiK/AR.js/" target="_blank">AR.js</a> - Made by Ms. K. Bhuvana Meenakshi, <a href="https://reps.mozilla.org/u/bhuvanameenakshi/" target="_blank">Mozillian Rep</a>  <a href="https://mozillatn.github.io/" target="_blank">(Mozilla TN)</a>
+	<a href="https://github.com/jeromeetienne/AR.js/" target="_blank">AR.js</a> - three.js mobile performance
 	<br/>
-	
+	Contact me any time at <a href='https://twitter.com/jerome_etienne' target='_blank'>@jerome_etienne</a>
 </div><script>
 	//////////////////////////////////////////////////////////////////////////////////
 	//		Init
 	//////////////////////////////////////////////////////////////////////////////////
-
 	// init renderer
 	var renderer	= new THREE.WebGLRenderer({
 		// antialias	: true,
@@ -28,38 +27,30 @@
 	renderer.domElement.style.top = '0px'
 	renderer.domElement.style.left = '0px'
 	document.body.appendChild( renderer.domElement );
-
 	// array of functions for the rendering loop
 	var onRenderFcts= [];
-
 	// init scene and camera
 	var scene	= new THREE.Scene();
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	//		Initialize a basic camera
 	//////////////////////////////////////////////////////////////////////////////////
-
 	// Create a camera
 	var camera = new THREE.Camera();
 	scene.add(camera);
-
 	////////////////////////////////////////////////////////////////////////////////
 	//          handle arToolkitSource
 	////////////////////////////////////////////////////////////////////////////////
-
 	var arToolkitSource = new THREEx.ArToolkitSource({
 		// to read from the webcam 
 		sourceType : 'webcam',
-
 		// to read from an image
-		sourceType : 'image',
-		sourceUrl : THREEx.ArToolkitContext.baseURL + '../data/images/marker.jpg',		
-
+		// sourceType : 'image',
+		// sourceUrl : THREEx.ArToolkitContext.baseURL + '../data/images/img.jpg',		
 		// to read from a video
-//		 sourceType : 'video',
-//		 sourceUrl : THREEx.ArToolkitContext.baseURL + '../data/videos/Firefox Reality Preview.mp4',		
+		// sourceType : 'video',
+		// sourceUrl : THREEx.ArToolkitContext.baseURL + '../data/videos/headtracking.mp4',		
 	})
-
 	arToolkitSource.init(function onReady(){
 		onResize()
 	})
@@ -79,25 +70,22 @@
 	//          initialize arToolkitContext
 	////////////////////////////////////////////////////////////////////////////////
 	
-
 	// create atToolkitContext
 	var arToolkitContext = new THREEx.ArToolkitContext({
-	cameraParametersUrl: THREEx.ArToolkitContext.baseURL + '../data/data/camera_para.dat',
-	detectionMode: 'mono',
-	maxDetectionRate: 30,
-	canvasWidth: 100*3,
-	canvasHeight: 80*3,
-         })
+		cameraParametersUrl: THREEx.ArToolkitContext.baseURL + '../data/data/camera_para.dat',
+		detectionMode: 'mono',
+		maxDetectionRate: 30,
+		canvasWidth: 80*3,
+		canvasHeight: 60*3,
+	})
 	// initialize it
 	arToolkitContext.init(function onCompleted(){
 		// copy projection matrix to camera
 		camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
 	})
-
 	// update artoolkit on every frame
 	onRenderFcts.push(function(){
 		if( arToolkitSource.ready === false )	return
-
 		arToolkitContext.update( arToolkitSource.domElement )
 	})
 	
@@ -110,11 +98,9 @@
 	scene.add(markerRoot)
 	var artoolkitMarker = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
 		type : 'pattern',
-		//patternUrl : THREEx.ArToolkitContext.baseURL + '../data/data/patt.hiro'
-		patternUrl : THREEx.ArToolkitContext.baseURL + '../data/data/patt.pattern-marker'
+		patternUrl : THREEx.ArToolkitContext.baseURL + '../data/data/patt.hiro'
 		// patternUrl : THREEx.ArToolkitContext.baseURL + '../data/data/patt.kanji'
 	})
-
 	// build a smoothedControls
 	var smoothedRoot = new THREE.Group()
 	scene.add(smoothedRoot)
@@ -129,9 +115,7 @@
 	//////////////////////////////////////////////////////////////////////////////////
 	//		add an object in the scene
 	//////////////////////////////////////////////////////////////////////////////////
-
 	var arWorldRoot = smoothedRoot
-
 	// add a torus knot	
 	var geometry	= new THREE.CubeGeometry(1,1,1);
 	var material	= new THREE.MeshNormalMaterial({
@@ -152,7 +136,6 @@
 	onRenderFcts.push(function(){
 		mesh.rotation.x += 0.1
 	})
-
 	//////////////////////////////////////////////////////////////////////////////////
 	//		render the whole thing on the page
 	//////////////////////////////////////////////////////////////////////////////////
@@ -163,7 +146,6 @@
 		renderer.render( scene, camera );
 		stats.update();
 	})
-
 	// run the rendering loop
 	var lastTimeMsec= null
 	requestAnimationFrame(function animate(nowMsec){
